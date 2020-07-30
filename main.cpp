@@ -5,7 +5,11 @@
 int main()
 {
 	int x, y;
-	std::cin >> x >> y;
+	do
+	{
+		std::cin >> x >> y;
+	}
+	while (!(x <= y && y < 1000));
 	Grid g(x, y);
 
 	std::string line;
