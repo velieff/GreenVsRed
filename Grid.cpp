@@ -41,6 +41,7 @@ void Grid::setLineY(int Y, std::string line)
 {
 	if (line.length() != x)
 	{
+		std::cout << "Error: Length of the string is different from x!\n";
 		return;
 	}
 	for (int i = 0; i < x; i++)
@@ -55,6 +56,7 @@ void Grid::setLineY(int Y, std::string line)
 		}
 		else
 		{
+			std::cout << "Error: The symbol #"<<i<<" is different from 0 or 1!\n";
 			return;
 		}
 	}
@@ -173,6 +175,13 @@ void Grid::copy(const Grid& other)
 {
 	setXY(other.x, other.y);
 	initialize();
+	for (int i = 0; i < y; i++)
+	{
+		for (int j = 0; j < x; j++)
+		{
+			this->cells[i][j] = other.cells[i][j];
+		}
+	}
 }
 
 void Grid::destroy()
