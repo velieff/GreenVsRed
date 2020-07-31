@@ -32,7 +32,7 @@ public:
 	int calculate(int X, int Y, int N);
 	
 private:
-	int countNeighboursHelper(int X, int Y, Cell color, bool isItInTheSameColumn) const;
+	int countNeighboursHelper(int X, int Y, Cell color, bool isItInDifferentColumn) const;
 	void initialize();
 	void setXY(int X, int Y);
 	void copy(const Grid& other);

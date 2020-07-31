@@ -68,7 +68,7 @@ void Grid::changeColor(int X, int Y)
 	cells[X][Y] = !cells[X][Y];
 }
 
-int Grid::countNeighboursHelper(int X, int Y, Cell color, bool isItInTheSameColumn) const
+int Grid::countNeighboursHelper(int X, int Y, Cell color, bool isItInDifferentColumn) const
 {
 	if (X < 0 || X >= this->x)
 	{
@@ -86,7 +86,7 @@ int Grid::countNeighboursHelper(int X, int Y, Cell color, bool isItInTheSameColu
 		if (cells[X][Y + 1] == color)
 			count++;
 	}
-	if (isItInTheSameColumn)
+	if (isItInDifferentColumn)
 	{
 		if (cells[X][Y] == color)
 			count++;
