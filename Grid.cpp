@@ -56,7 +56,7 @@ void Grid::setLineY(int Y, std::string line)
 		}
 		else
 		{
-			std::cout << "Error: The symbol #"<<i<<" is different from 0 or 1!\n";
+			std::cout << "Error: The symbol #" << i << " is different from 0 or 1!\n";
 			return;
 		}
 	}
@@ -68,90 +68,73 @@ void Grid::changeColor(int X, int Y)
 	cells[X][Y] = !cells[X][Y];
 }
 
-int Grid::countNeighbours(int X, int Y, Cell color) const
+int Grid::countNeighboursHelper(int X, int Y, Cell color, bool isItInTheSameColumn) const
 {
+	if (X < 0 || X >= this->x)
+	{
+		return 0;
+	}
+
 	int count = 0;
-	if (X - 1 >= 0)
-	{
-		if (Y - 1 >= 0)
-		{
-			if (cells[X - 1][Y - 1] == color)
-				count++;
-		}
-		if (Y + 1 < this->y)
-		{
-			if (cells[X - 1][Y + 1] == color)
-				count++;
-		}
-		if (cells[X - 1][Y] == color)
-			count++;
-	}
-
-	if (X + 1 < this->x)
-	{
-		if (Y - 1 >= 0)
-		{
-			if (cells[X + 1][Y - 1] == color)
-				count++;
-		}
-		if (Y + 1 < this->y)
-		{
-			if (cells[X + 1][Y + 1] == color)
-				count++;
-		}
-		if (cells[X + 1][Y] == color)
-			count++;
-	}
-
 	if (Y - 1 >= 0)
 	{
 		if (cells[X][Y - 1] == color)
 			count++;
 	}
-
 	if (Y + 1 < this->y)
 	{
 		if (cells[X][Y + 1] == color)
+			count++;
+	}
+	if (isItInTheSameColumn)
+	{
+		if (cells[X][Y] == color)
 			count++;
 	}
 
 	return count;
 }
 
-void Grid::rule1(int X, int Y, int greenNeighboursNum)
+int Grid::countNeighbours(int X, int Y, Cell color) const
+{
+	return countNeighboursHelper(X - 1, Y, color, true)
+		 + countNeighboursHelper(X + 1, Y, color, true)
+		 + countNeighboursHelper(X, Y, color, false);
+}
+
+bool Grid::rule1(int X, int Y, int greenNeighboursNum) const
 {
 	if (cells[X][Y] == Green)
 	{
-		return;
+		return false;
 	}
-	if (greenNeighboursNum == 3 || greenNeighboursNum == 6)
-	{
-		changeColor(X, Y);
-	}
+	return (greenNeighboursNum == 3 || greenNeighboursNum == 6);
 }
 
-void Grid::rule3(int X, int Y, int greenNeighboursNum)
+bool Grid::rule3(int X, int Y, int greenNeighboursNum) const
 {
 	if (cells[X][Y] == Red)
 	{
-		return;
+		return false;
 	}
-	if (greenNeighboursNum != 2 && greenNeighboursNum != 3 && greenNeighboursNum != 6)
-	{
-		changeColor(X, Y);
-	}
+	return (greenNeighboursNum != 2 && greenNeighboursNum != 3 && greenNeighboursNum != 6);
 }
 
 int Grid::calculate(int X, int Y, int N)
 {
 	int result = 0;
+	int countGreen = countNeighbours(X, Y, Green);
 	for (int i = 0; i <= N; i++)
 	{
 		if (cells[X][Y] == Green)
+		{
 			result++;
-		int countGreen = countNeighbours(X, Y, Green);
-		rule1(X, Y, countGreen);
-		rule3(X, Y, countGreen);
+		}
+
+		if (rule1(X, Y, countGreen) || rule3(X, Y, countGreen))
+		{
+			changeColor(X, Y);
+		}
 	}
 	return result;
 }
